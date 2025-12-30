@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
 export default async function LoggedOutLayout({
     children,
@@ -8,9 +8,9 @@ export default async function LoggedOutLayout({
 }) {
     const session = await auth();
 
-    if (!!session?.user?.id) {
-        redirect("/my-account");
-    }
+    // if (!!session?.user?.id) {
+    //     redirect("/my-account");
+    // }
 
     return children;
 }
