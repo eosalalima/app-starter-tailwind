@@ -1,12 +1,13 @@
-import NextAuth from "next-auth";
+import NextAuth, { getServerSession, type NextAuthOptions } from "next-auth";
+import { signIn as nextAuthSignIn, signOut as nextAuthSignOut } from "next-auth/react";
 import Credentials from "next-auth/providers/credentials";
+import { authenticator } from "@otplib/preset-default";
+import { compare } from "bcryptjs";
+import { eq } from "drizzle-orm";
 import db from "./db/drizzle";
 import { users } from "./db/usersSchema";
-import { eq } from "drizzle-orm";
-import { compare } from "bcryptjs";
-import { authenticator } from "@otplib/preset-default";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
     callbacks: {
         jwt({ token, user }) {
@@ -30,28 +31,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 token: {},
             },
             async authorize(credentials) {
+                const { email, password, token } = credentials ?? {};
+
+                if (!email || !password) {
+                    throw new Error("Email and password are required");
+                }
+
                 const [user] = await db
                     .select()
                     .from(users)
-                    .where(eq(users.email, credentials.email as string));
+                    .where(eq(users.email, email));
 
                 if (!user) {
                     throw new Error("Incorrect credentials");
                 } else {
-                    const passwordCorrect = await compare(
-                        credentials.password as string,
-                        user.password!
-                    );
+                    const passwordCorrect = await compare(password, user.password!);
 
                     if (!passwordCorrect) {
                         throw new Error("Incorrect credentials");
                     }
 
                     if (user.twoFactorAuthActivated) {
-                        const tokenValid = authenticator.check(
-                            credentials.token as string,
-                            user.twoFactorAuthSecret ?? ""
-                        );
+                        if (!token) {
+                            throw new Error("Invalid two-factor authentication token");
+                        }
+
+                        const tokenValid = authenticator.check(token, user.twoFactorAuthSecret ?? "");
 
                         if (!tokenValid) {
                             throw new Error(
@@ -65,4 +70,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
         }),
     ],
-});
+};
+
+export const auth = () => getServerSession(authOptions);
+
+const authHandler = NextAuth(authOptions);
+
+export const handlers = { GET: authHandler, POST: authHandler };
+export const signIn = nextAuthSignIn;
+export const signOut = nextAuthSignOut;
