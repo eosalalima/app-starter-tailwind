@@ -1,6 +1,20 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Avatar } from "../ui-kit/avatar";
+
+interface RandomUser {
+    results?: Array<{
+        picture?: {
+            thumbnail?: string;
+        };
+        name?: {
+            first?: string;
+            last?: string;
+        };
+        email?: string;
+    }>;
+}
 import {
     Dropdown,
     DropdownButton,
@@ -38,86 +52,84 @@ import {
     TicketIcon,
     UserIcon,
 } from "@heroicons/react/20/solid";
+import LogoutMenuItem from "./logout-menu-item";
+import { Heading } from "../ui-kit/heading";
+
+const menuItems = {
+    headerMenuItems: [
+        { label: "Search", icon: MagnifyingGlassIcon, href: "/search" },
+        { label: "Inbox", icon: InboxIcon, href: "/inbox" },
+    ],
+    bodyMenuItems: {
+        primary: [
+            { label: "Home", icon: HomeIcon, href: "/home" },
+            { label: "Events", icon: Square2StackIcon, href: "/events" },
+            { label: "Orders", icon: TicketIcon, href: "/orders" },
+            { label: "Broadcasts", icon: MegaphoneIcon, href: "/broadcasts" },
+            { label: "Settings", icon: Cog6ToothIcon, href: "/settings" },
+        ],
+        secondary: [
+            {
+                label: "Support",
+                icon: QuestionMarkCircleIcon,
+                href: "/support",
+            },
+            { label: "Changelog", icon: SparklesIcon, href: "/changelog" },
+        ],
+    },
+    footerMenuItems: [
+        { label: "My profile", icon: UserIcon, href: "/my-profile" },
+        { label: "Settings", icon: Cog8ToothIcon, href: "/settings" },
+        {
+            label: "Privacy policy",
+            icon: ShieldCheckIcon,
+            href: "/privacy-policy",
+        },
+        {
+            label: "Share feedback",
+            icon: LightBulbIcon,
+            href: "/share-feedback",
+        },
+        {
+            label: "Sign Out",
+            icon: ArrowRightStartOnRectangleIcon,
+            href: "/logout",
+        },
+    ],
+};
 
 export function AppSidebar() {
+    const [randomUser, setRandomUser] = useState<RandomUser | null>(null);
+
+    useEffect(() => {
+        fetch("https://randomuser.me/api/")
+            .then((res) => res.json())
+            .then((data) => setRandomUser(data));
+    }, []);
+
     return (
         <Sidebar>
             <SidebarHeader>
-                <Dropdown>
-                    <DropdownButton as={SidebarItem} className="mb-2.5">
-                        <Avatar src="/tailwind-logo.svg" />
-                        <SidebarLabel>Tailwind Labs</SidebarLabel>
-                        <ChevronDownIcon />
-                    </DropdownButton>
-                    <DropdownMenu className="min-w-64" anchor="bottom start">
-                        <DropdownItem href="/teams/1/settings">
-                            <Cog8ToothIcon />
-                            <DropdownLabel>Settings</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/teams/1">
-                            <Avatar slot="icon" src="/tailwind-logo.svg" />
-                            <DropdownLabel>Tailwind Labs</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/teams/2">
-                            <Avatar
-                                slot="icon"
-                                initials="WC"
-                                className="bg-purple-500 text-white"
-                            />
-                            <DropdownLabel>Workcation</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/teams/create">
-                            <PlusIcon />
-                            <DropdownLabel>New team&hellip;</DropdownLabel>
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-                <SidebarSection>
-                    <SidebarItem href="/search">
-                        <MagnifyingGlassIcon />
-                        <SidebarLabel>Search</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/inbox">
-                        <InboxIcon />
-                        <SidebarLabel>Inbox</SidebarLabel>
-                    </SidebarItem>
-                </SidebarSection>
+                <Avatar src="/app-logo.png" className="size-10" />
+                <Heading>Synergy Tech</Heading>
             </SidebarHeader>
             <SidebarBody>
                 <SidebarSection>
-                    <SidebarItem href="/home">
-                        <HomeIcon />
-                        <SidebarLabel>Home</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/events">
-                        <Square2StackIcon />
-                        <SidebarLabel>Events</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/orders">
-                        <TicketIcon />
-                        <SidebarLabel>Orders</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/broadcasts">
-                        <MegaphoneIcon />
-                        <SidebarLabel>Broadcasts</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/settings">
-                        <Cog6ToothIcon />
-                        <SidebarLabel>Settings</SidebarLabel>
-                    </SidebarItem>
+                    {menuItems.bodyMenuItems.primary.map((item) => (
+                        <SidebarItem key={item.href} href={item.href}>
+                            <item.icon />
+                            <SidebarLabel>{item.label}</SidebarLabel>
+                        </SidebarItem>
+                    ))}
                 </SidebarSection>
                 <SidebarSpacer />
                 <SidebarSection>
-                    <SidebarItem href="/support">
-                        <QuestionMarkCircleIcon />
-                        <SidebarLabel>Support</SidebarLabel>
-                    </SidebarItem>
-                    <SidebarItem href="/changelog">
-                        <SparklesIcon />
-                        <SidebarLabel>Changelog</SidebarLabel>
-                    </SidebarItem>
+                    {menuItems.bodyMenuItems.secondary.map((item) => (
+                        <SidebarItem key={item.href} href={item.href}>
+                            <item.icon />
+                            <SidebarLabel>{item.label}</SidebarLabel>
+                        </SidebarItem>
+                    ))}
                 </SidebarSection>
             </SidebarBody>
             <SidebarFooter>
@@ -125,45 +137,50 @@ export function AppSidebar() {
                     <DropdownButton as={SidebarItem}>
                         <span className="flex min-w-0 items-center gap-3">
                             <Avatar
-                                src="/profile-photo.jpg"
+                                src={
+                                    randomUser?.results?.[0]?.picture?.thumbnail
+                                }
                                 className="size-10"
                                 square
                                 alt=""
                             />
                             <span className="min-w-0">
                                 <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
-                                    Erica
+                                    {randomUser?.results?.[0]?.name?.first}{" "}
+                                    {randomUser?.results?.[0]?.name?.last}
                                 </span>
                                 <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                                    erica@example.com
+                                    {randomUser?.results?.[0]?.email}
                                 </span>
                             </span>
                         </span>
                         <ChevronUpIcon />
                     </DropdownButton>
                     <DropdownMenu className="min-w-64" anchor="top start">
-                        <DropdownItem href="/my-profile">
-                            <UserIcon />
-                            <DropdownLabel>My profile</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/settings">
-                            <Cog8ToothIcon />
-                            <DropdownLabel>Settings</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/privacy-policy">
-                            <ShieldCheckIcon />
-                            <DropdownLabel>Privacy policy</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownItem href="/share-feedback">
-                            <LightBulbIcon />
-                            <DropdownLabel>Share feedback</DropdownLabel>
-                        </DropdownItem>
-                        <DropdownDivider />
-                        <DropdownItem href="/logout">
-                            <ArrowRightStartOnRectangleIcon />
-                            <DropdownLabel>Sign out</DropdownLabel>
-                        </DropdownItem>
+                        {menuItems.footerMenuItems.map((item, index) => (
+                            <>
+                                {item.label === "Sign Out" ? (
+                                    <LogoutMenuItem
+                                        key={item.href}
+                                        item={item}
+                                    />
+                                ) : (
+                                    <DropdownItem
+                                        key={item.href}
+                                        href={item.href}
+                                    >
+                                        <item.icon />
+                                        <DropdownLabel>
+                                            {item.label}
+                                        </DropdownLabel>
+                                    </DropdownItem>
+                                )}
+
+                                {index % 2 === 1 && (
+                                    <DropdownDivider key={`divider-${index}`} />
+                                )}
+                            </>
+                        ))}
                     </DropdownMenu>
                 </Dropdown>
             </SidebarFooter>
