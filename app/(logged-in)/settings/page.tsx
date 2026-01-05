@@ -10,6 +10,8 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import db from "@/db/drizzle";
 import TwoFactorAuthForm from "./two-factor-auth-form";
+import { Form } from "@/components/custom/form";
+import ChangePasswordForm from "./change-password-form";
 
 const secondaryNavigation = [
     { name: "Account", href: "#", current: true },
@@ -137,48 +139,52 @@ export default async function Settings() {
                         </Text>
                     </div>
 
-                    <form className="md:col-span-2">
-                        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
-                            <div className="col-span-full">
-                                <Field>
-                                    <Label>Current Password</Label>
-                                    <Input
-                                        id="current-password"
-                                        name="current_password"
-                                    />
-                                </Field>
+                    {/* <Form {...form}>
+                        <form className="md:col-span-2">
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
+                                <div className="col-span-full">
+                                    <Field>
+                                        <Label>Current Password</Label>
+                                        <Input
+                                            id="current-password"
+                                            name="current_password"
+                                        />
+                                    </Field>
+                                </div>
+
+                                <div className="col-span-full">
+                                    <Field>
+                                        <Label>New Password</Label>
+                                        <Input
+                                            id="new-password"
+                                            name="new_password"
+                                        />
+                                    </Field>
+                                </div>
+
+                                <div className="col-span-full">
+                                    <Field>
+                                        <Label>Confirm Password</Label>
+                                        <Input
+                                            id="confirm-password"
+                                            name="confirm_password"
+                                        />
+                                    </Field>
+                                </div>
                             </div>
 
-                            <div className="col-span-full">
-                                <Field>
-                                    <Label>New Password</Label>
-                                    <Input
-                                        id="new-password"
-                                        name="new_password"
-                                    />
-                                </Field>
+                            <div className="mt-8 flex">
+                                <button
+                                    type="submit"
+                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Save
+                                </button>
                             </div>
+                        </form>
+                    </Form>*/}
 
-                            <div className="col-span-full">
-                                <Field>
-                                    <Label>Confirm Password</Label>
-                                    <Input
-                                        id="confirm-password"
-                                        name="confirm_password"
-                                    />
-                                </Field>
-                            </div>
-                        </div>
-
-                        <div className="mt-8 flex">
-                            <button
-                                type="submit"
-                                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                Save
-                            </button>
-                        </div>
-                    </form>
+                    <ChangePasswordForm />
                 </div>
 
                 <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
