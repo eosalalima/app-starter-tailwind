@@ -1,17 +1,9 @@
 import { Button } from "@/components/ui-kit/button";
-import {
-    Description,
-    Field,
-    FieldGroup,
-    Fieldset,
-    Label,
-} from "@/components/ui-kit/fieldset";
+import { Field, Fieldset, Label } from "@/components/ui-kit/fieldset";
 import { Subheading } from "@/components/ui-kit/heading";
 import { Input } from "@/components/ui-kit/input";
 import { Navbar, NavbarItem, NavbarSection } from "@/components/ui-kit/navbar";
-import { Switch, SwitchField } from "@/components/ui-kit/switch";
 import { Text } from "@/components/ui-kit/text";
-import { ChevronDownIcon } from "lucide-react";
 import Image from "next/image";
 import { auth } from "@/auth";
 import { users } from "@/db/schema";
@@ -198,20 +190,11 @@ export default async function Settings() {
                         </Text>
                     </div>
 
-                    <form className="flex items-start md:col-span-2">
-                        {/* <SwitchField>
-                            <Switch
-                                name="toggle-otp"
-                                defaultChecked
-                                color="indigo"
-                            />
-                        </SwitchField> */}
-                        <TwoFactorAuthForm
-                            twoFactorActivated={
-                                user?.twoFactorAuthActivated ?? false
-                            }
-                        />
-                    </form>
+                    <TwoFactorAuthForm
+                        twoFactorActivated={
+                            user?.twoFactorAuthActivated ?? false
+                        }
+                    />
                 </div>
 
                 <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">

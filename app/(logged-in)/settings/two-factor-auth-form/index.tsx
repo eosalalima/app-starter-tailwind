@@ -8,7 +8,6 @@ import { QRCodeSVG } from "qrcode.react";
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/custom/input-otp";
 import { Text } from "@/components/ui-kit/text";
