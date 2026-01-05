@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Avatar } from "../ui-kit/avatar";
 
 interface RandomUser {
@@ -158,17 +158,11 @@ export function AppSidebar() {
                     </DropdownButton>
                     <DropdownMenu className="min-w-64" anchor="top start">
                         {menuItems.footerMenuItems.map((item, index) => (
-                            <>
+                            <Fragment key={item.href}>
                                 {item.label === "Sign Out" ? (
-                                    <LogoutMenuItem
-                                        key={item.href}
-                                        item={item}
-                                    />
+                                    <LogoutMenuItem item={item} />
                                 ) : (
-                                    <DropdownItem
-                                        key={item.href}
-                                        href={item.href}
-                                    >
+                                    <DropdownItem href={item.href}>
                                         <item.icon />
                                         <DropdownLabel>
                                             {item.label}
@@ -176,10 +170,8 @@ export function AppSidebar() {
                                     </DropdownItem>
                                 )}
 
-                                {index % 2 === 1 && (
-                                    <DropdownDivider key={`divider-${index}`} />
-                                )}
-                            </>
+                                {index % 2 === 1 && <DropdownDivider />}
+                            </Fragment>
                         ))}
                     </DropdownMenu>
                 </Dropdown>
