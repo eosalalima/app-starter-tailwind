@@ -99,13 +99,23 @@ const menuItems = {
 };
 
 export function AppSidebar() {
+    const [isHydrated, setIsHydrated] = useState(false);
     const [randomUser, setRandomUser] = useState<RandomUser | null>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsHydrated(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isHydrated) {
+            return;
+        }
+
         fetch("https://randomuser.me/api/")
             .then((res) => res.json())
             .then((data) => setRandomUser(data));
-    }, []);
+    }, [isHydrated]);
 
     return (
         <Sidebar>
@@ -133,48 +143,65 @@ export function AppSidebar() {
                 </SidebarSection>
             </SidebarBody>
             <SidebarFooter>
-                <Dropdown>
-                    <DropdownButton as={SidebarItem}>
+                {isHydrated ? (
+                    <Dropdown>
+                        <DropdownButton as={SidebarItem}>
+                            <span className="flex min-w-0 items-center gap-3">
+                                <Avatar
+                                    src={
+                                        randomUser?.results?.[0]?.picture
+                                            ?.thumbnail
+                                    }
+                                    className="size-10"
+                                    square
+                                    alt=""
+                                />
+                                <span className="min-w-0">
+                                    <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
+                                        {randomUser?.results?.[0]?.name?.first}{" "}
+                                        {randomUser?.results?.[0]?.name?.last}
+                                    </span>
+                                    <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
+                                        {randomUser?.results?.[0]?.email}
+                                    </span>
+                                </span>
+                            </span>
+                            <ChevronUpIcon />
+                        </DropdownButton>
+                        <DropdownMenu className="min-w-64" anchor="top start">
+                            {menuItems.footerMenuItems.map((item, index) => (
+                                <Fragment key={item.href}>
+                                    {item.label === "Sign Out" ? (
+                                        <LogoutMenuItem item={item} />
+                                    ) : (
+                                        <DropdownItem href={item.href}>
+                                            <item.icon />
+                                            <DropdownLabel>
+                                                {item.label}
+                                            </DropdownLabel>
+                                        </DropdownItem>
+                                    )}
+
+                                    {index % 2 === 1 && <DropdownDivider />}
+                                </Fragment>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
+                ) : (
+                    <SidebarItem className="cursor-default" aria-disabled>
                         <span className="flex min-w-0 items-center gap-3">
-                            <Avatar
-                                src={
-                                    randomUser?.results?.[0]?.picture?.thumbnail
-                                }
-                                className="size-10"
-                                square
-                                alt=""
-                            />
+                            <Avatar className="size-10" square />
                             <span className="min-w-0">
                                 <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
-                                    {randomUser?.results?.[0]?.name?.first}{" "}
-                                    {randomUser?.results?.[0]?.name?.last}
+                                    Loading account…
                                 </span>
                                 <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                                    {randomUser?.results?.[0]?.email}
+                                    Fetching profile details
                                 </span>
                             </span>
                         </span>
-                        <ChevronUpIcon />
-                    </DropdownButton>
-                    <DropdownMenu className="min-w-64" anchor="top start">
-                        {menuItems.footerMenuItems.map((item, index) => (
-                            <Fragment key={item.href}>
-                                {item.label === "Sign Out" ? (
-                                    <LogoutMenuItem item={item} />
-                                ) : (
-                                    <DropdownItem href={item.href}>
-                                        <item.icon />
-                                        <DropdownLabel>
-                                            {item.label}
-                                        </DropdownLabel>
-                                    </DropdownItem>
-                                )}
-
-                                {index % 2 === 1 && <DropdownDivider />}
-                            </Fragment>
-                        ))}
-                    </DropdownMenu>
-                </Dropdown>
+                    </SidebarItem>
+                )}
             </SidebarFooter>
         </Sidebar>
     );
