@@ -2,7 +2,13 @@
 
 import { Field, Label } from "@/components/ui-kit/fieldset";
 import { Input } from "@/components/ui-kit/input";
-import { Form } from "lucide-react";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/custom/form";
 import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
 import { passwordSchema } from "@/validation/passwordSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,47 +60,69 @@ export default function ChangePasswordForm() {
                 className="md:col-span-2"
                 onSubmit={form.handleSubmit(handleSubmit)}
             >
-                <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
-                    <div className="col-span-full">
-                        <Field>
-                            <Label>Current Password</Label>
-                            <Input
-                                id="current-password"
-                                name="currentPassword"
-                            />
-                        </Field>
-                    </div>
+                <fieldset
+                    disabled={form.formState.isSubmitting}
+                    className="flex flex-col gap-4"
+                >
+                    <FormField
+                        control={form.control}
+                        name="currentPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Current Password</FormLabel>
+                                <FormControl className="mt-3">
+                                    <Input {...field} type="password" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                    <div className="col-span-full">
-                        <Field>
-                            <Label>New Password</Label>
-                            <Input id="password" name="password" />
-                        </Field>
-                    </div>
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="mt-4">Password</FormLabel>
+                                <FormControl className="mt-3">
+                                    <Input {...field} type="password" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                    <div className="col-span-full">
-                        <Field>
-                            <Label>Confirm Password</Label>
-                            <Input
-                                id="confirm-password"
-                                name="confirmPassword"
-                            />
-                        </Field>
+                    <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="mt-4">
+                                    Confirm Password
+                                </FormLabel>
+                                <FormControl className="mt-3">
+                                    <Input {...field} type="password" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {!!form.formState.errors.root?.message && (
+                        <FormMessage>
+                            {form.formState.errors.root?.message}
+                        </FormMessage>
+                    )}
+                    <div className="mt-8 flex">
+                        <Button
+                            type="submit"
+                            color="indigo"
+                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                            Change Password
+                        </Button>
                     </div>
-                </div>
-                {!!form.formState.errors.root?.message && (
-                    <FormMessage>
-                        {form.formState.errors.root?.message}
-                    </FormMessage>
-                )}
-                <div className="mt-8 flex">
-                    <Button
-                        type="submit"
-                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                        Change Password
-                    </Button>
-                </div>
+                </fieldset>
             </form>
         </Form>
     );

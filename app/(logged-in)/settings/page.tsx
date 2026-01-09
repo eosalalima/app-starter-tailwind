@@ -10,7 +10,6 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import db from "@/db/drizzle";
 import TwoFactorAuthForm from "./two-factor-auth-form";
-import { Form } from "@/components/custom/form";
 import ChangePasswordForm from "./change-password-form";
 
 const secondaryNavigation = [
@@ -98,7 +97,7 @@ export default async function Settings() {
 
                                 <div className="col-span-full">
                                     <Field>
-                                        <Label>EMail Address</Label>
+                                        <Label>Email Address</Label>
                                         <Input id="email" name="email" />
                                     </Field>
                                 </div>
@@ -120,12 +119,13 @@ export default async function Settings() {
                         </Fieldset>
 
                         <div className="mt-8 flex">
-                            <button
+                            <Button
                                 type="submit"
+                                color="indigo"
                                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 Save
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>
@@ -138,51 +138,6 @@ export default async function Settings() {
                             Update your password associated with your account.
                         </Text>
                     </div>
-
-                    {/* <Form {...form}>
-                        <form className="md:col-span-2">
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
-                                <div className="col-span-full">
-                                    <Field>
-                                        <Label>Current Password</Label>
-                                        <Input
-                                            id="current-password"
-                                            name="current_password"
-                                        />
-                                    </Field>
-                                </div>
-
-                                <div className="col-span-full">
-                                    <Field>
-                                        <Label>New Password</Label>
-                                        <Input
-                                            id="new-password"
-                                            name="new_password"
-                                        />
-                                    </Field>
-                                </div>
-
-                                <div className="col-span-full">
-                                    <Field>
-                                        <Label>Confirm Password</Label>
-                                        <Input
-                                            id="confirm-password"
-                                            name="confirm_password"
-                                        />
-                                    </Field>
-                                </div>
-                            </div>
-
-                            <div className="mt-8 flex">
-                                <button
-                                    type="submit"
-                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </form>
-                    </Form>*/}
 
                     <ChangePasswordForm />
                 </div>
@@ -227,12 +182,13 @@ export default async function Settings() {
                         </div>
 
                         <div className="mt-8 flex">
-                            <button
+                            <Button
                                 type="submit"
+                                color="indigo"
                                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 Log out other sessions
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>
