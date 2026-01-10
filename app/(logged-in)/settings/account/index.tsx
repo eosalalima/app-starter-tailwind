@@ -5,8 +5,22 @@ import ChangePasswordForm from "./change-password-form";
 import PersonalInformationForm from "./personal-information-form/page";
 import LogoutOtherSessionForm from "./logout-other-session-form/page";
 import DeleteAccountForm from "./delete-account-form/page";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import db from "@/db/drizzle";
+import { getSession } from "../actions";
 
 export async function AccountSettings() {
+    const session = await getSession();
+
+    const [user] = await db
+        .select({
+            twoFactorAuthActivated: users.twoFactorAuthActivated,
+        })
+        .from(users)
+        .where(eq(users.id, parseInt(session!.user!.id!)))
+        .execute();
+
     return (
         <main>
             <h1 className="sr-only">Account Settings</h1>

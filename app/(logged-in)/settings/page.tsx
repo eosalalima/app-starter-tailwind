@@ -1,18 +1,13 @@
 "use client";
 
-import { Navbar, NavbarItem, NavbarSection } from "@/components/ui-kit/navbar";
 import { useState } from "react";
+import { Navbar, NavbarItem, NavbarSection } from "@/components/ui-kit/navbar";
 import { AppearanceSettings } from "./appearance";
 import { AccountSettings } from "./account";
 import { NotificationsSettings } from "./notifications";
 import { BillingSettings } from "./billing";
 import { TeamsSettings } from "./teams";
 import { IntegrationsSettings } from "./integrations";
-import { auth } from "@/auth";
-import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import db from "@/db/drizzle";
-import { getSession } from "./actions";
 
 const secondaryNavigation = [
     { name: "Account", href: "#" },
@@ -23,17 +18,8 @@ const secondaryNavigation = [
     { name: "Integrations", href: "#" },
 ];
 
-export default async function Settings() {
+export default function Settings() {
     const [currentNav, setCurrentNav] = useState("Account");
-    const session = await getSession();
-
-    const [user] = await db
-        .select({
-            twoFactorAuthActivated: users.twoFactorAuthActivated,
-        })
-        .from(users)
-        .where(eq(users.id, parseInt(session!.user!.id!)))
-        .execute();
 
     return (
         <main>
