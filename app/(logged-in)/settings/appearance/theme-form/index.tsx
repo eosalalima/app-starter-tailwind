@@ -19,18 +19,19 @@ const themes = [
 const STORAGE_KEY = "app-theme";
 
 export function ThemeForm() {
-    const [selectedThemeId, setSelectedThemeId] = useState("light");
+    const [selectedThemeId, setSelectedThemeId] = useState(() => {
+        if (typeof window !== "undefined") {
+            const storedTheme = window.localStorage.getItem(STORAGE_KEY);
+            if (storedTheme && themes.some((theme) => theme.id === storedTheme)) {
+                return storedTheme;
+            }
+        }
+        return "light";
+    });
     const selectedTheme = useMemo(
         () => themes.find((theme) => theme.id === selectedThemeId) ?? themes[0],
         [selectedThemeId],
     );
-
-    useEffect(() => {
-        const storedTheme = window.localStorage.getItem(STORAGE_KEY);
-        if (storedTheme && themes.some((theme) => theme.id === storedTheme)) {
-            setSelectedThemeId(storedTheme);
-        }
-    }, []);
 
     useEffect(() => {
         const root = document.documentElement;
@@ -76,9 +77,11 @@ export function ThemeForm() {
                                 options={themes}
                                 displayValue={(theme) => theme?.name}
                                 value={selectedTheme}
-                                onChange={(theme) =>
-                                    setSelectedThemeId(theme.id)
-                                }
+                                onChange={(theme) => {
+                                    if (theme) {
+                                        setSelectedThemeId(theme.id);
+                                    }
+                                }}
                             >
                                 {(theme) => (
                                     <ComboboxOption value={theme}>
