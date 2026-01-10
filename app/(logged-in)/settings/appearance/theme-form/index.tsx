@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { Subheading } from "@/components/ui-kit/heading";
 import { Field, Fieldset, Label } from "@/components/ui-kit/fieldset";
 import { Text } from "@/components/ui-kit/text";
@@ -15,7 +16,49 @@ const themes = [
     { id: "system", name: "System Default" },
 ];
 
+const STORAGE_KEY = "app-theme";
+
 export function ThemeForm() {
+    const [selectedThemeId, setSelectedThemeId] = useState("light");
+    const selectedTheme = useMemo(
+        () => themes.find((theme) => theme.id === selectedThemeId) ?? themes[0],
+        [selectedThemeId],
+    );
+
+    useEffect(() => {
+        const storedTheme = window.localStorage.getItem(STORAGE_KEY);
+        if (storedTheme && themes.some((theme) => theme.id === storedTheme)) {
+            setSelectedThemeId(storedTheme);
+        }
+    }, []);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        root.dataset.theme = selectedThemeId;
+        window.localStorage.setItem(STORAGE_KEY, selectedThemeId);
+
+        const applyTheme = (isDark: boolean) => {
+            root.classList.toggle("dark", isDark);
+            root.classList.toggle("light", !isDark);
+        };
+
+        if (selectedThemeId === "system") {
+            const mediaQuery = window.matchMedia(
+                "(prefers-color-scheme: dark)",
+            );
+            applyTheme(mediaQuery.matches);
+
+            const handleChange = (event: MediaQueryListEvent) => {
+                applyTheme(event.matches);
+            };
+
+            mediaQuery.addEventListener("change", handleChange);
+            return () => mediaQuery.removeEventListener("change", handleChange);
+        }
+
+        applyTheme(selectedThemeId === "dark");
+    }, [selectedThemeId]);
+
     return (
         <>
             <div>
@@ -32,7 +75,10 @@ export function ThemeForm() {
                                 name="themes"
                                 options={themes}
                                 displayValue={(theme) => theme?.name}
-                                defaultValue={themes[0]}
+                                value={selectedTheme}
+                                onChange={(theme) =>
+                                    setSelectedThemeId(theme.id)
+                                }
                             >
                                 {(theme) => (
                                     <ComboboxOption value={theme}>
