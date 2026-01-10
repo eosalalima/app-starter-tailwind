@@ -8,10 +8,10 @@ import DeleteAccountForm from "./delete-account-form/page";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import db from "@/db/drizzle";
-import { getSession } from "../actions";
+import { auth } from "@/auth";
 
 export async function AccountSettings() {
-    const session = await getSession();
+    const session = await auth();
 
     const [user] = await db
         .select({
