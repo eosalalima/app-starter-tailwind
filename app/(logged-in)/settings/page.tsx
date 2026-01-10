@@ -19,7 +19,7 @@ const secondaryNavigation = [
 type SettingsTab = (typeof secondaryNavigation)[number]["key"];
 
 type SettingsPageProps = {
-    searchParams?: { tab?: string };
+    searchParams?: Promise<{ tab?: string }>;
 };
 
 const settingsContent: Record<SettingsTab, ReactNode> = {
@@ -31,8 +31,9 @@ const settingsContent: Record<SettingsTab, ReactNode> = {
     integrations: <IntegrationSettings />,
 };
 
-export default function Settings({ searchParams }: SettingsPageProps) {
-    const requestedTab = searchParams?.tab?.toLowerCase() ?? "account";
+export default async function Settings({ searchParams }: SettingsPageProps) {
+    const resolvedSearchParams = await searchParams;
+    const requestedTab = resolvedSearchParams?.tab?.toLowerCase() ?? "account";
     const currentTab = secondaryNavigation.some((item) => item.key === requestedTab)
         ? (requestedTab as SettingsTab)
         : "account";
