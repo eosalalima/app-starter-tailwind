@@ -1,3 +1,5 @@
+"use client";
+
 import { Subheading } from "@/components/ui-kit/heading";
 import { Field, Fieldset, Label } from "@/components/ui-kit/fieldset";
 import { Text } from "@/components/ui-kit/text";
