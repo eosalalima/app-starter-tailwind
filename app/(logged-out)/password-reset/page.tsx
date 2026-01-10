@@ -1,3 +1,5 @@
+"use client";
+
 import { AuthLayout } from "@/components/ui-kit/auth-layout";
 import { Form, useForm } from "react-hook-form";
 import { passwordReset } from "./actions";
