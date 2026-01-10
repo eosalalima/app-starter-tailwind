@@ -1,3 +1,3 @@
-export function IntegrationsSettings() {
+export function IntegrationSettings() {
     return <div>Integrations Settings Page</div>;
 }
