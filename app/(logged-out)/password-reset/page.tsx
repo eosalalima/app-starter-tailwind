@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/ui-kit/auth-layout";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { passwordReset } from "./actions";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,7 @@ import {
     CardTitle,
 } from "@/components/custom/card";
 import {
+    Form,
     FormField,
     FormItem,
     FormLabel,
