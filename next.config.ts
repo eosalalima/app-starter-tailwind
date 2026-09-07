@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
         },
     },
     images: {
-        domains: [
+        remotePatterns: [
             "plus.unsplash.com",
             "images.unsplash.com",
             "res.cloudinary.com",
@@ -19,7 +19,11 @@ const nextConfig: NextConfig = {
             "images.pexels.com",
             "tailwindcss.com",
             "randomuser.me",
-        ],
+        ].map((hostname) => ({
+            protocol: "https" as const,
+            hostname,
+            pathname: "/**",
+        })),
     },
 };
 
