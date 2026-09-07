@@ -2,7 +2,24 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+This application requires a [Neon](https://neon.com/) Postgres database. Create a
+local environment file from the provided template before starting the app:
+
+```bash
+# macOS or Linux
+cp .env.example .env.local
+```
+
+```powershell
+# Windows PowerShell
+Copy-Item .env.example .env.local
+```
+
+Replace the placeholder `NEON_DATABASE_URL` in `.env.local` with the connection
+string from the Neon Console. Keep `.env.local` private; it is ignored by Git.
+After changing an environment variable, restart the development server.
+
+Then run the development server:
 
 ```bash
 npm run dev
